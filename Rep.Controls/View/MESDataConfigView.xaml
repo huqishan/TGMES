@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="Rep.Controls.View.MESDataConfigView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Rep.Controls.View"
+             mc:Ignorable="d" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />-->
+                <!--控件样式-->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#349fda"/>
+            <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#333333"/>
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#0288d1"/>
+            <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#015f92"/>
+            <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFFFF"/>
+            <!--ACCENT-->
+            <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#689f38"/>
+            <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#FFFFFF"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <TreeView x:Name="treeView" ItemsSource="{Binding Property.Items}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectedItemChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectedCommand}" CommandParameter="{Binding ElementName=treeView, Path=SelectedValue}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}" CommandParameter="{Binding ElementName=treeView, Path=SelectedValue}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Childs}">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsRoot, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="{Binding ClientCode}" ToolTip="客户端方法名称"/>
+                            <TextBlock Margin="10,0,0,0" Text="{Binding MESCode}" ToolTip="MES端方法名称"/>
+                            <TextBlock Margin="10,0,0,0" Text="{Binding DataType}" ToolTip="需转换成的格式"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsRoot, Converter={StaticResource InverseBoolToVisConverter}}">
+                            <TextBlock Text="{Binding ClientCode}" ToolTip="客户端Code"/>
+                            <TextBlock Margin="10,0,0,0" Text="{Binding MESCode}" ToolTip="上传MESCode"/>
+                            <TextBlock Margin="10,0,0,0" Text="{Binding DataType}" ToolTip="数据类型"/>
+                            <TextBlock Margin="10,0,0,0" Text="{Binding DefectValue}" ToolTip="默认值"/>
+                            <TextBlock Margin="10,0,0,0" Text="{Binding KeepDecimalLength}" ToolTip="保留小数位"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+
+        <materialDesign:PopupBox Grid.Row="1" Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}" PlacementMode="LeftAndAlignMiddles"
+    UnfurlOrientation="Horizontal"
+    ToolTip="Manage items"
+    Margin="0 0 10 10"
+    HorizontalAlignment="Right"
+    VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <Button ToolTip="Add an item" Command="{Binding AddCommand}">
+                    <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Stretch="Uniform" Width="15" Height="15" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+                <Button ToolTip="Remove selected item" Command="{Binding RemoveCommand}">
+                    <Path Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Stretch="Uniform" Width="15" Height="15" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+                <Button ToolTip="Up selected item" Command="{Binding UpCommand}">
+                    <Path Data="M15,20H9V12H4.16L12,4.16L19.84,12H15V20Z" Stretch="Uniform" Width="15" Height="15" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+                <Button ToolTip="Down selected item" Command="{Binding DownCommand}">
+                    <Path Data="M9,4H15V12H19.84L12,19.84L4.16,12H9V4Z" Stretch="Uniform" Width="15" Height="15" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+                <Button ToolTip="Save items" Command="{Binding SaveCommand}">
+                    <Path Data="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" Stretch="Uniform" Width="15" Height="15" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+                </Button>
+            </StackPanel>
+        </materialDesign:PopupBox>
+    </Grid>
+</UserControl>

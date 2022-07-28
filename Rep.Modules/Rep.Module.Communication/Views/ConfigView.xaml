@@ -1,0 +1,173 @@
+﻿<UserControl x:Class="Rep.Module.Communication.Views.ConfigView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Rep.Module.Communication.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             MinHeight="600" MinWidth="1400"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:controls="clr-namespace:Rep.Controls.View;assembly=Rep.Controls"
+             xmlns:extensions="clr-namespace:Rep.Controls.CustomContorls;assembly=Rep.Controls"
+             xmlns:convert="clr-namespace:Rep.Controls.Converts;assembly=Rep.Controls"
+             prism:ViewModelLocator.AutoWireViewModel="True" >
+    <!--是否添加资源不影响样式，为了方便查看样式-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />-->
+                <!--控件样式-->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#349fda"/>
+            <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#0288d1"/>
+            <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#015f92"/>
+            <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFFFF"/>
+            <!--ACCENT-->
+            <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#689f38"/>
+            <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#FFFFFF"/>
+            <convert:MESTypeToVisibilityConvert x:Key="mesTypeToVisibility"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <materialDesign:Card materialDesign:Background="Azure">
+            <TabControl Style="{StaticResource MaterialDesignFilledTabControl}" TabStripPlacement="Left">
+                <TabItem Header="客户端通讯">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{Binding ElementName=localIpAddress,Path=Height}"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" >
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                                <TextBox x:Name="localIpAddress" Margin="5" materialDesign:HintAssist.Hint="RabbitMQ IpAddress" MinWidth="100" Text="{Binding ConfigPropertys.RabbitMQAddress, Mode=TwoWay}"  Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                <TextBox Margin="5" materialDesign:HintAssist.Hint="RabbitMQ Port" MinWidth="50" Text="{Binding ConfigPropertys.RabbitMQPort, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                <TextBox Margin="5" materialDesign:HintAssist.Hint="RabbitMQ UserName" MinWidth="50" Text="{Binding ConfigPropertys.RabbitMQUserName, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                <TextBox Margin="5" materialDesign:HintAssist.Hint="RabbitMQ PassWord" MinWidth="50" Text="{Binding ConfigPropertys.RabbitMQPassWord, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                <Button Margin="5,-1,0,0" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="100" Content="保存" Command="{Binding SaveCommand}"/>
+                            </StackPanel>
+
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <GroupBox Header="客户端通讯数据" Style="{StaticResource MaterialDesignGroupBox}" Margin="5">
+                                <ListBox ItemsSource="{Binding ConfigPropertys.CommunicationData}" extensions:ListBoxExtensions.AutoCopy="True" />
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="MES端通讯">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{Binding ElementName=MESType, Path=Height}"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <ListBox Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}" ItemsSource="{Binding ConfigPropertys.MESTypes}" x:Name="MESType" SelectedItem="{Binding ConfigPropertys.SelectMESType}">
+                            </ListBox>
+                            <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="MaterialDesignSwitchToggleButton" IsChecked="{Binding ConfigPropertys.IsEnabledMES, Mode=TwoWay}" />
+                            <Label Content="启用MES" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Button Margin="5,-1,0,0" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="100" Content="保存" Command="{Binding SaveCommand}"/>
+                        </StackPanel>
+                        <Grid Grid.Row="1">
+                            <!--WebServices-->
+                            <Grid VerticalAlignment="Top" Visibility="{Binding ConfigPropertys.SelectMESType, Converter={StaticResource mesTypeToVisibility}, ConverterParameter='WebServices'}">
+                                <StackPanel Margin="10" Orientation="Vertical">
+                                    <TextBox Margin="5" materialDesign:HintAssist.Hint="URL" Text="{Binding ConfigPropertys.URL, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                    <TextBox Margin="5" materialDesign:HintAssist.Hint="xmlns:xsi" Text="{Binding ConfigPropertys.XSI, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                    <TextBox Margin="5" materialDesign:HintAssist.Hint="xmlns:xsd" Text="{Binding ConfigPropertys.XSD, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                    <TextBox Margin="5" materialDesign:HintAssist.Hint="xmlns:soap" Text="{Binding ConfigPropertys.SOAP, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                    <TextBox Margin="5" materialDesign:HintAssist.Hint="xmlns" Text="{Binding ConfigPropertys.XMLNS, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                            <!--TCP-->
+                            <Grid Visibility="{Binding ConfigPropertys.SelectMESType, Converter={StaticResource mesTypeToVisibility}, ConverterParameter='Tcp Client'}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="{Binding ElementName=MESTCPType, Path=Height}"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <StackPanel x:Name="MESTCPType" Orientation="Horizontal" VerticalAlignment="Top">
+                                    <TextBox Margin="5" materialDesign:HintAssist.Hint="Local IpAddress" MinWidth="100" Text="{Binding ConfigPropertys.MESLocalIpAddress, Mode=TwoWay}"  Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                    <TextBox Margin="5" materialDesign:HintAssist.Hint="Local Port" MinWidth="50" Text="{Binding ConfigPropertys.MESLoaclPort, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                    <TextBox Margin="5" materialDesign:HintAssist.Hint="Remote IpAddress" MinWidth="100" Text="{Binding ConfigPropertys.MESRemoteIpAddress, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                    <TextBox Margin="5" materialDesign:HintAssist.Hint="Remote Port" MinWidth="50" Text="{Binding ConfigPropertys.MESRemotePort, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <GroupBox Grid.Row="1" Header="MES通讯数据" Style="{StaticResource MaterialDesignGroupBox}" Margin="5">
+                                    <ListBox ItemsSource="{Binding ConfigPropertys.MESCommunicationData}" extensions:ListBoxExtensions.AutoCopy="True" />
+                                </GroupBox>
+                            </Grid>
+                            <!--WebApi-->
+                            <Grid Visibility="{Binding ConfigPropertys.SelectMESType, Converter={StaticResource mesTypeToVisibility}, ConverterParameter='WebApi'}">
+                                <StackPanel Margin="10" Orientation="Vertical" VerticalAlignment="Top">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Margin="5" materialDesign:HintAssist.Hint="URL" Text="{Binding ConfigPropertys.URL, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                        <TextBox Margin="5" Grid.Column="1" materialDesign:HintAssist.Hint="Result Name" Text="{Binding ConfigPropertys.ResultName, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                        <TextBox Margin="5" Grid.Column="2" materialDesign:HintAssist.Hint="Result Check" Text="{Binding ConfigPropertys.ResultCheck, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Margin="5" materialDesign:HintAssist.Hint="Token Url" Text="{Binding ConfigPropertys.TokenUrl, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                        <TextBox Margin="5" Grid.Column="1" materialDesign:HintAssist.Hint="Token Name" Text="{Binding ConfigPropertys.TokenName, Mode=TwoWay}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                </TabItem>
+                <TabItem Header="MES数据配置">
+                    <controls:MESDataConfigView DataContext="{Binding DataConfig}"/>
+                </TabItem>
+                <TabItem Header="测试MES">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Margin="5" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="100" Content="转换" Command="{Binding ConvertCommand}"/>
+                                <Button Margin="5" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="100" Content="发送" Command="{Binding SendCommand}"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid>
+                                    <GroupBox Header="源数据" Style="{StaticResource MaterialDesignGroupBox}" Margin="5">
+                                        <TextBox Text="{Binding ConfigPropertys.SourceData}" Style="{StaticResource MaterialDesignOutlinedTextBox}" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+                                    </GroupBox>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <GroupBox Header="XML / JSON / SOAP" Style="{StaticResource MaterialDesignGroupBox}" Margin="5">
+                                        <TextBox Text="{Binding ConfigPropertys.ConvertedData}" Style="{StaticResource MaterialDesignOutlinedTextBox}" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+                                    </GroupBox>
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <GroupBox Header="结果" Style="{StaticResource MaterialDesignGroupBox}" Margin="5">
+                                        <TextBox Text="{Binding ConfigPropertys.Result}" Style="{StaticResource MaterialDesignOutlinedTextBox}" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+                                    </GroupBox>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

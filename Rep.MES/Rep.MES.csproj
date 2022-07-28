@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ApplicationIcon>Resources\REP.ico</ApplicationIcon>
+    <PackageIcon>REP.ico</PackageIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Rep.MES\**" />
+    <EmbeddedResource Remove="Rep.MES\**" />
+    <None Remove="Rep.MES\**" />
+    <Page Remove="Rep.MES\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\REP.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\REP.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignColors" Version="2.0.6" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Prism.Unity" Version="8.1.97" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rep.Controls\Rep.Controls.csproj" />
+    <ProjectReference Include="..\Rep.Modules\Rep.Module.Communication\Rep.Module.Communication.csproj" />
+    <ProjectReference Include="..\Rep.Modules\Rep.Module.Data\Rep.Module.Data.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\REP.ico" />
+    <Resource Include="Views\REP.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="C:\Users\Administrator\.nuget\packages\nlog.config\4.7.15\contentFiles\any\any\NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\REP.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+</Project>
